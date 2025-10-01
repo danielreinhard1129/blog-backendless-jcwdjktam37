@@ -12,7 +12,7 @@ interface Payload {
   title: string;
 }
 
-interface ResponseThumbnail {
+interface ThumbnailResponse {
   fileURL: string;
   filePath: string;
 }
@@ -27,7 +27,7 @@ const useCreateBlog = () => {
 
       const randomId = Date.now() + Math.floor(Math.random() * 1000);
       const folderName = "images";
-      const resultThumbnail = await axiosInstance.post<ResponseThumbnail>(
+      const resultThumbnail = await axiosInstance.post<ThumbnailResponse>(
         `/api/files/${folderName}/${randomId}`,
         form,
       );
