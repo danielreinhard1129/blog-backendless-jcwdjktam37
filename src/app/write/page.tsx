@@ -1,11 +1,6 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { useForm } from "react-hook-form";
-import { createBlogSchema } from "./schema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import z from "zod";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -14,10 +9,21 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import useCreateBlog from "@/hooks/useCreateBlog";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Trash } from "lucide-react";
+import Image from "next/image";
+import { useRef, useState } from "react";
+import { useForm } from "react-hook-form";
+import z from "zod";
+import { createBlogSchema } from "./schema";
 
 const Write = () => {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [selectedImage, setSelectedImage] = useState<string>("");
+
   const { mutateAsync: createBlog, isPending } = useCreateBlog();
 
   const form = useForm<z.infer<typeof createBlogSchema>>({
@@ -117,18 +123,47 @@ const Write = () => {
               <FormItem>
                 <FormLabel>Thumbnail</FormLabel>
                 <FormControl>
-                  <Input
-                    accept="image/*"
-                    placeholder="Thumbnail"
-                    type="file"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
+                  {selectedImage ? (
+                    <div className="relative w-fit">
+                      <Image
+                        src={selectedImage}
+                        alt="thumbnail"
+                        width={300}
+                        height={250}
+                      />
 
-                      if (file) {
-                        field.onChange(file);
-                      }
-                    }}
-                  />
+                      <Button
+                        className="absolute -top-2 -right-2 rounded-full"
+                        size="icon"
+                        type="button"
+                        variant="destructive"
+                        onClick={() => {
+                          setSelectedImage("");
+                          form.resetField("thumbnail");
+                          if (inputRef.current) {
+                            inputRef.current.value = "";
+                          }
+                        }}
+                      >
+                        <Trash />
+                      </Button>
+                    </div>
+                  ) : (
+                    <Input
+                      ref={inputRef}
+                      accept="image/*"
+                      placeholder="Thumbnail"
+                      type="file"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+
+                        if (file) {
+                          field.onChange(file);
+                          setSelectedImage(URL.createObjectURL(file));
+                        }
+                      }}
+                    />
+                  )}
                 </FormControl>
                 <FormMessage />
               </FormItem>

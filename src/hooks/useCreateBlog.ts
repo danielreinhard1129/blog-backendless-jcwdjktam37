@@ -2,6 +2,7 @@ import { axiosInstance } from "@/lib/axios";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 interface Payload {
   author: string;
@@ -42,11 +43,11 @@ const useCreateBlog = () => {
       });
     },
     onSuccess: () => {
-      alert("Create blog success");
+      toast.success("Create blog success");
       router.push("/");
     },
     onError: (error: AxiosError<{ message: string }>) => {
-      alert(error.response?.data.message);
+      toast.error(error.response?.data.message);
     },
   });
 };
