@@ -19,6 +19,7 @@ import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
 import { createBlogSchema } from "./schema";
+import TiptapRichtexteditor from "@/components/TiptapRichtextEditor";
 
 const Write = () => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -109,7 +110,12 @@ const Write = () => {
               <FormItem>
                 <FormLabel>Content</FormLabel>
                 <FormControl>
-                  <Textarea placeholder="Content" {...field} />
+                  <TiptapRichtexteditor
+                    content={field.value}
+                    onChange={(content) => {
+                      field.onChange(content);
+                    }}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
