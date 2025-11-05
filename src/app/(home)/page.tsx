@@ -4,6 +4,7 @@ import PaginationSection from "@/components/PaginationSection";
 import { Input } from "@/components/ui/input";
 import useGetBlogs from "@/hooks/useGetBlogs";
 import Image from "next/image";
+import Link from "next/link";
 import { parseAsInteger, useQueryState } from "nuqs";
 import { useDebounceValue } from "usehooks-ts";
 
@@ -57,17 +58,21 @@ const Home = () => {
         <div className="grid grid-cols-3 gap-8">
           {blogs?.data.map((blog) => {
             return (
-              <div key={blog.id} className="rounded-xl border border-black p-6">
-                <Image
-                  className="rounded-lg"
-                  src={blog.thumbnail}
-                  alt="thumbnail"
-                  width={500}
-                  height={300}
-                />
-                <h2 className="line-clamp-1 text-lg font-bold">{blog.title}</h2>
-                <p className="line-clamp-3">{blog.description}</p>
-              </div>
+              <Link key={blog.id} href={`/blogs/${blog.slug}`}>
+                <div className="rounded-xl border border-black p-6">
+                  <Image
+                    className="rounded-lg"
+                    src={blog.thumbnail}
+                    alt="thumbnail"
+                    width={500}
+                    height={300}
+                  />
+                  <h2 className="line-clamp-1 text-lg font-bold">
+                    {blog.title}
+                  </h2>
+                  <p className="line-clamp-3">{blog.description}</p>
+                </div>
+              </Link>
             );
           })}
         </div>
